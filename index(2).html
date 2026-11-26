@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101214">
+<title>BAC | Batalhão de Ações de Comandos</title>
+<style>
+:root{--bg:#0d0f11;--panel:#171a1d;--panel2:#202428;--line:#30363b;--text:#f1f3f4;--muted:#a2a9af;--green:#719b79;--red:#b66b6b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,Arial,sans-serif}
+header{height:190px;background:linear-gradient(110deg,#171a1d,#292e32 65%,#111315);border-bottom:1px solid var(--line);position:relative;display:flex;align-items:end;padding:24px max(22px,calc((100% - 1050px)/2));overflow:hidden}
+header:after{content:"✦  ✦  ✦";position:absolute;right:5%;top:24px;font-size:42px;letter-spacing:18px;color:#ffffff12}
+.brand{display:flex;align-items:center;gap:15px;z-index:1}.crest{width:76px;height:76px;border-radius:18px;background:#343a3e;border:1px solid #596168;display:grid;place-items:center;font-size:30px;font-weight:900}
+h1{font-size:25px;margin:0;letter-spacing:1px}header p{margin:5px 0 0;color:#bbc1c5}
+main{max-width:1050px;margin:24px auto;padding:0 18px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.identity{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:13px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+button,.btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:10px 14px;border-radius:9px;font-weight:650;cursor:pointer}
+button:hover,.btn:hover{border-color:#718078}button.primary{background:#526f59;border-color:#688a70}button.danger{background:#492c2c;border-color:#704343}
+.tab.active{background:#34483a;border-color:#66816c}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+h2{font-size:18px;margin:0 0 14px}h3{font-size:15px;margin:0 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+label{display:block;color:var(--muted);font-size:13px;margin:10px 0 6px}
+input,select,textarea{width:100%;background:#0f1214;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:11px;font:inherit}
+textarea{min-height:95px;resize:vertical}
+.muted{color:var(--muted)}.small{font-size:12px}.hidden{display:none!important}
+.item{background:#111416;border:1px solid var(--line);border-radius:10px;padding:13px;margin:9px 0}
+.itemhead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pill{display:inline-block;border-radius:30px;padding:4px 9px;background:#2b3d30;color:#b9d5bf;font-size:11px}
+.pill.gray{background:#33383d;color:#c2c7cb}.pill.red{background:#492c2c;color:#e2b4b4}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+footer{text-align:center;color:#777f85;padding:30px 12px;font-size:12px}
+hr{border:0;border-top:1px solid var(--line);margin:16px 0}
+@media(max-width:600px){header{height:155px;padding:18px}.crest{width:60px;height:60px}h1{font-size:20px}main{padding:0 12px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="crest">BAC</div><div><h1>BATALHÃO DE AÇÕES DE COMANDOS</h1><p>BAC 1º · Sistema de presença e atendimento</p></div></div></header>
+<main>
+<section id="login" class="card">
+<h2>Identificação</h2><p class="muted">Informe seu nick do Discord e sua patente para acessar o painel.</p>
+<div class="grid"><div><label>Nick do Discord</label><input id="nick" placeholder="Seu nick no Discord"></div><div><label>Patente / cargo</label><select id="rank"></select></div></div>
+<div class="actions"><button class="primary" onclick="entrar()">Entrar</button></div>
+<p class="small muted">A identificação é declarada pelo próprio usuário e ficará pendente até a conferência de um administrador.</p>
+</section>
+<section id="app" class="hidden">
+<div class="topbar"><div><strong id="welcome"></strong><div class="identity" id="identity"></div></div><button onclick="sair()">Sair</button></div>
+<nav>
+<button class="tab active" data-tab="presenca" onclick="aba('presenca',this)">Presença geral</button>
+<button class="tab" data-tab="tickets" onclick="aba('tickets',this)">Suporte / Tickets</button>
+<button class="tab" data-tab="admin" onclick="aba('admin',this)">Administração</button>
+</nav>
+<section id="presenca" class="tabcontent">
+<div class="card"><h2>Registrar presença</h2><p class="muted">Cada integrante registra a própria presença. Os lançamentos aparecem na lista geral.</p><button class="primary" onclick="registrar()">Registrar minha presença</button></div>
+<div class="card"><div class="itemhead"><h2>Presenças registradas</h2><span class="pill" id="totalPres">0 registros</span></div><div id="listaPres"></div></div>
+</section>
+<section id="tickets" class="tabcontent hidden">
+<div class="card"><h2>Abrir ticket de suporte</h2><label>Assunto</label><input id="assunto" placeholder="Ex.: Dúvida sobre cadastro"><label>Mensagem</label><textarea id="mensagem" placeholder="Descreva o que precisa..."></textarea><div class="actions"><button class="primary" onclick="abrirTicket()">Enviar ticket</button></div></div>
+<div class="card"><h2>Tickets</h2><p class="muted small">Seus tickets e os atendimentos disponíveis para a equipe autorizada.</p><div id="listaTickets"></div></div>
+</section>
+<section id="admin" class="tabcontent hidden">
+<div class="card"><h2>Administração</h2><p class="muted">Área demonstrativa. Neste protótipo, as permissões não são protegidas por autenticação real.</p><div id="listaMembros"></div></div>
+</section>
+</section>
+</main>
+<footer>BAC 1º · Batalhão de Ações de Comandos</footer>
+<script>
+const cargos=["Candidato","Praças","Graduados","Oficiais","Alto Escalão","Subcomandante","Comandante","Donos BAC","Criador","Criador do BAC","Subcomandante Real","Comandante Real","Sub-responsável","Responsável"];
+const $=id=>document.getElementById(id);
+const get=k=>JSON.parse(localStorage.getItem("bac_"+k)||"[]");
+const put=(k,v)=>localStorage.setItem("bac_"+k,JSON.stringify(v));
+let atual=null;
+$("rank").innerHTML=cargos.map(x=>`<option>${x}</option>`).join("");
+function entrar(){let nick=$("nick").value.trim();if(!nick)return alert("Informe seu nick.");atual={nick,rank:$("rank").value};let m=get("membros");if(!m.some(x=>x.nick.toLowerCase()===nick.toLowerCase())){m.push({...atual,permissao:"Membro",verificacao:"Pendente"});put("membros",m)}$("login").classList.add("hidden");$("app").classList.remove("hidden");$("welcome").textContent=nick;$("identity").textContent=atual.rank+" · "+(m.find(x=>x.nick===nick)?.verificacao||"Pendente");render()}
+function sair(){$("app").classList.add("hidden");$("login").classList.remove("hidden");atual=null}
+function aba(id,btn){document.querySelectorAll(".tabcontent").forEach(x=>x.classList.add("hidden"));$(id).classList.remove("hidden");document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));btn.classList.add("active");render()}
+function registrar(){let p=get("presencas");p.unshift({nick:atual.nick,rank:atual.rank,data:new Date().toLocaleString("pt-BR")});put("presencas",p);render();alert("Presença registrada.")}
+function render(){let p=get("presencas");$("totalPres").textContent=p.length+" registros";$("listaPres").innerHTML=p.length?p.map(x=>`<div class="item"><div class="itemhead"><strong>${esc(x.nick)}</strong><span class="pill">${esc(x.rank)}</span></div><div class="small muted">${esc(x.data)}</div></div>`).join(""):'<p class="muted">Nenhuma presença registrada.</p>';let t=get("tickets");$("listaTickets").innerHTML=t.length?t.map((x,i)=>`<div class="item"><div class="itemhead"><strong>${esc(x.assunto)}</strong><span class="pill ${x.status==="Encerrado"?"gray":""}">${x.status}</span></div><div class="small muted">Por ${esc(x.nick)} · ${esc(x.data)}</div><p>${esc(x.mensagem)}</p>${x.resposta?`<p><b>Resposta:</b> ${esc(x.resposta)}</p>`:""}<div class="actions"><button onclick="responder(${i})">Responder</button><button class="danger" onclick="encerrar(${i})">Encerrar</button></div></div>`).join(""):'<p class="muted">Nenhum ticket aberto.</p>';let m=get("membros");$("listaMembros").innerHTML=m.map((x,i)=>`<div class="item"><strong>${esc(x.nick)}</strong> <span class="pill gray">${esc(x.rank)}</span><div class="grid"><div><label>Permissão</label><select id="perm${i}"><option ${x.permissao==="Membro"?"selected":""}>Membro</option><option ${x.permissao==="Suporte"?"selected":""}>Suporte</option><option ${x.permissao==="Administrador"?"selected":""}>Administrador</option></select></div><div><label>Verificação</label><select id="ver${i}"><option ${x.verificacao==="Pendente"?"selected":""}>Pendente</option><option ${x.verificacao==="Verificado"?"selected":""}>Verificado</option><option ${x.verificacao==="Não verificado"?"selected":""}>Não verificado</option></select></div></div><div class="actions"><button onclick="salvarMembro(${i})">Salvar</button></div></div>`).join("")||'<p class="muted">Nenhum membro.</p>'}
+function abrirTicket(){let a=$("assunto").value.trim(),m=$("mensagem").value.trim();if(!a||!m)return alert("Preencha assunto e mensagem.");let t=get("tickets");t.unshift({nick:atual.nick,assunto:a,mensagem:m,status:"Aberto",data:new Date().toLocaleString("pt-BR")});put("tickets",t);$("assunto").value=$("mensagem").value="";render();alert("Ticket enviado.")}
+function responder(i){let t=get("tickets"),r=prompt("Digite a resposta:");if(r){t[i].resposta=r;t[i].status="Em atendimento";put("tickets",t);render()}}
+function encerrar(i){let t=get("tickets");t[i].status="Encerrado";put("tickets",t);render()}
+function salvarMembro(i){let m=get("membros");m[i].permissao=$("perm"+i).value;m[i].verificacao=$("ver"+i).value;put("membros",m);render()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+</script>
+</body></html>
