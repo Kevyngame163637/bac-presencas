@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#242428">
+<title>[BAC 1º] Batalhão de Ações de Comandos</title>
+<style>
+:root{--bg:#242428;--panel:#2e2e33;--panel2:#38383e;--panel3:#19191c;--text:#f2f2f4;--muted:#b7b7bd;--green:#43b581;--line:#414148;--red:#d46b6b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+button,input{font:inherit}.wrap{max-width:1180px;margin:auto;padding:0 22px 48px}
+.banner{height:285px;background:#080809 url('assets/bac-banner.jpg') center 38%/cover no-repeat;position:relative;border-radius:0 0 5px 5px}
+.banner:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.78),rgba(0,0,0,.05) 85%)}
+.profile{position:relative;margin-top:-82px;z-index:2;display:flex;align-items:end;gap:22px;padding:0 18px}
+.avatar{width:145px;height:145px;object-fit:cover;border-radius:28px;border:8px solid var(--bg);background:var(--panel)}
+.identity{padding-bottom:12px;min-width:0}.identity h1{font-size:clamp(23px,4vw,36px);line-height:1.15;margin:0 0 12px;font-weight:750;letter-spacing:-.7px}
+.motto{margin:0;color:#dedee1;font-size:clamp(14px,2vw,19px)}
+.stats{display:flex;gap:24px;margin:26px 0 30px;color:#ddd;font-size:18px;flex-wrap:wrap}
+.dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--green);margin-right:10px}.dot.gray{background:#9b9ba2}
+.nav{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+.nav button,.period button,.action{border:0;border-radius:13px;background:var(--panel2);color:var(--text);padding:13px 18px;cursor:pointer;transition:.18s}
+.nav button:hover,.period button:hover,.action:hover{background:#45454d;transform:translateY(-1px)}
+.nav button.active,.period button.active{background:#45454d;box-shadow:inset 0 -3px #bdbdc4}
+.section{display:none}.section.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:var(--panel);border-radius:17px;padding:20px;border:1px solid rgba(255,255,255,.025)}
+.card .eyebrow{font-size:13px;color:var(--muted);margin-bottom:8px}.big{font-size:34px;font-weight:750;line-height:1.1}.sub{font-size:13px;color:var(--muted);margin-top:8px}
+.section-title{font-size:22px;margin:0 0 16px;letter-spacing:-.3px}
+.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin:26px 0 15px}
+.period{display:flex;gap:8px;flex-wrap:wrap}.period button{padding:10px 14px}
+.table-wrap{overflow:auto;background:var(--panel);border-radius:16px}
+table{width:100%;border-collapse:collapse;min-width:540px}th,td{text-align:left;padding:15px 18px;border-bottom:1px solid var(--line)}th{font-size:13px;color:var(--muted);font-weight:600}td{font-size:14px}tr:last-child td{border-bottom:0}
+.pill{display:inline-block;border-radius:30px;background:#3b3b42;padding:4px 10px;font-size:12px;color:#e4e4e7}
+.empty{color:var(--muted);padding:25px;text-align:center}
+.admin-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.action.primary{background:#e6e6e9;color:#202024;font-weight:700}.action.danger{background:#593737;color:#ffe5e5}
+.field{display:flex;flex-direction:column;gap:7px;margin:14px 0}.field label{font-size:13px;color:var(--muted)}.field input{background:#1e1e22;border:1px solid var(--line);border-radius:10px;padding:12px;color:var(--text);outline:none}.field input:focus{border-color:#aaa}
+.notice{background:#303036;border-left:3px solid #9a9aa2;padding:13px 15px;border-radius:8px;color:#c9c9ce;font-size:13px;margin-top:18px}
+.login{max-width:430px;margin:10px auto}.login h2{margin-top:0}
+.chat-fab{position:fixed;right:22px;bottom:22px;width:58px;height:58px;border:0;border-radius:50%;background:#e5e5e8;color:#242428;font-size:24px;box-shadow:0 8px 25px #0005;cursor:pointer}
+.chatbox{position:fixed;right:22px;bottom:92px;width:min(340px,calc(100vw - 44px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;display:none;box-shadow:0 10px 40px #0008;z-index:5}
+.chatbox.open{display:block}.chatbox p{font-size:14px;color:var(--muted)}
+footer{text-align:center;color:#888891;font-size:12px;margin-top:35px}
+@media(max-width:760px){.wrap{padding:0 14px 35px}.banner{height:220px}.profile{align-items:center;margin-top:-56px;padding:0 7px;gap:13px}.avatar{width:105px;height:105px;border-radius:23px;border-width:6px}.identity{padding:18px 0 0}.identity h1{font-size:22px}.motto{font-size:13px}.stats{font-size:15px;margin:23px 4px}.grid{grid-template-columns:1fr}.nav{gap:8px}.nav button{padding:11px 13px;font-size:14px}.card{padding:17px}}
+</style>
+</head>
+<body>
+<div class="banner"></div>
+<main class="wrap">
+  <header class="profile">
+    <img class="avatar" src="assets/bac-avatar.jpg" alt="Imagem de perfil do BAC">
+    <div class="identity">
+      <h1>[BAC 1º] Batalhão de Ações de Comandos</h1>
+      <p class="motto">"O máximo de confusão, morte e destruição na retaguarda do inimigo."</p>
+    </div>
+  </header>
+  <div class="stats">
+    <span><i class="dot"></i><strong id="onlineCount">53</strong> online</span>
+    <span><i class="dot gray"></i><strong>170</strong> Membros</span>
+  </div>
+
+  <nav class="nav" aria-label="Navegação principal">
+    <button class="active" data-tab="public">Presenças</button>
+    <button data-tab="history">Histórico</button>
+    <button data-tab="admin">Administração</button>
+  </nav>
+
+  <section id="public" class="section active">
+    <h2 class="section-title">Painel de presenças</h2>
+    <div class="grid">
+      <article class="card"><div class="eyebrow">Matutino</div><div class="big" id="morningCount">0</div><div class="sub">Registros de hoje</div></article>
+      <article class="card"><div class="eyebrow">Vespertino</div><div class="big" id="afternoonCount">0</div><div class="sub">Registros de hoje</div></article>
+      <article class="card"><div class="eyebrow">Noturno</div><div class="big" id="nightCount">0</div><div class="sub">Registros de hoje</div></article>
+    </div>
+    <div class="toolbar"><h2 class="section-title" style="margin:0">Registros do dia</h2><span class="pill" id="todayLabel"></span></div>
+    <div class="table-wrap"><table><thead><tr><th>Período</th><th>Data</th><th>Responsável</th><th>Presenças</th></tr></thead><tbody id="todayRows"></tbody></table><div class="empty" id="todayEmpty">Nenhuma presença lançada hoje.</div></div>
+  </section>
+
+  <section id="history" class="section">
+    <h2 class="section-title">Histórico de registros</h2>
+    <div class="table-wrap"><table><thead><tr><th>Período</th><th>Data</th><th>Responsável</th><th>Presenças</th></tr></thead><tbody id="historyRows"></tbody></table><div class="empty" id="historyEmpty">Ainda não existem registros.</div></div>
+  </section>
+
+  <section id="admin" class="section">
+    <div id="loginPanel" class="card login">
+      <h2 class="section-title">Acesso administrativo</h2>
+      <p class="sub">Área restrita aos responsáveis autorizados.</p>
+      <div class="field"><label for="username">Usuário</label><input id="username" autocomplete="username" placeholder="Digite seu usuário"></div>
+      <div class="field"><label for="password">Senha</label><input id="password" type="password" autocomplete="current-password" placeholder="Digite sua senha"></div>
+      <button class="action primary" id="loginBtn">Entrar</button>
+      <div class="notice">Demonstração visual: usuário <b>admin</b> e senha <b>bac123</b>. Este acesso local não protege um site publicado.</div>
+    </div>
+    <div id="adminPanel" style="display:none">
+      <div class="admin-head"><h2 class="section-title">Painel administrativo</h2><button class="action" id="logoutBtn">Sair</button></div>
+      <div class="card">
+        <div class="field"><label for="operator">Responsável pelo lançamento</label><input id="operator" placeholder="Nome do responsável"></div>
+        <div class="field"><label for="amount">Quantidade de presenças</label><input id="amount" type="number" min="0" max="170" value="1"></div>
+        <p class="sub">Selecione o período para registrar a presença geral do batalhão.</p>
+        <div class="period">
+          <button data-period="Matutino">Matutino</button>
+          <button data-period="Vespertino">Vespertino</button>
+          <button data-period="Noturno">Noturno</button>
+        </div>
+        <div class="notice">Protótipo inicial: os lançamentos ficam salvos apenas neste navegador. Para uso real, será necessário conectar banco de dados e autenticação segura.</div>
+      </div>
+    </div>
+  </section>
+  <footer>BAC 1º • Batalhão de Ações de Comandos</footer>
+</main>
+<button class="chat-fab" id="chatFab" aria-label="Abrir atendimento">✦</button>
+<div class="chatbox" id="chatbox"><strong>Atendimento BAC</strong><p>Olá! Sou o assistente do site. Posso orientar sobre consulta de presenças, histórico e acesso administrativo.</p><button class="action" id="closeChat">Fechar</button></div>
+<script>
+const $=id=>document.getElementById(id);
+const key='bac_presence_demo_v1';
+let records=JSON.parse(localStorage.getItem(key)||'[]');
+const today=()=>new Date().toLocaleDateString('pt-BR');
+$('todayLabel').textContent=today();
+function render(){
+ const todayRows=records.filter(r=>r.date===today()).slice().reverse();
+ const count=p=>todayRows.filter(r=>r.period===p).reduce((n,r)=>n+r.amount,0);
+ $('morningCount').textContent=count('Matutino');
+ $('afternoonCount').textContent=count('Vespertino');
+ $('nightCount').textContent=count('Noturno');
+ const row=r=>`<tr><td><span class="pill">${r.period}</span></td><td>${r.date}</td><td>${escapeHtml(r.operator)}</td><td>${r.amount}</td></tr>`;
+ $('todayRows').innerHTML=todayRows.map(row).join('');
+ $('historyRows').innerHTML=records.slice().reverse().map(row).join('');
+ $('todayEmpty').style.display=todayRows.length?'none':'block';
+ $('historyEmpty').style.display=records.length?'none':'block';
+}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x===b));
+ document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===b.dataset.tab));
+}));
+$('loginBtn').onclick=()=>{
+ if($('username').value==='admin'&&$('password').value==='bac123'){
+  $('loginPanel').style.display='none';$('adminPanel').style.display='block';
+ }else alert('Usuário ou senha incorretos.');
+};
+$('logoutBtn').onclick=()=>{$('adminPanel').style.display='none';$('loginPanel').style.display='block';$('password').value='';};
+document.querySelectorAll('[data-period]').forEach(b=>b.onclick=()=>{
+ const operator=$('operator').value.trim(),amount=Number($('amount').value);
+ if(!operator){alert('Informe o responsável pelo lançamento.');return;}
+ if(!Number.isInteger(amount)||amount<0||amount>170){alert('Informe uma quantidade entre 0 e 170.');return;}
+ const period=b.dataset.period;
+ if(records.some(r=>r.date===today()&&r.period===period)){if(!confirm('Já existe um lançamento deste período hoje. Deseja adicionar outro registro?'))return;}
+ records.push({period,date:today(),operator,amount,createdAt:new Date().toISOString()});
+ localStorage.setItem(key,JSON.stringify(records));render();alert('Registro salvo neste navegador.');
+});
+$('chatFab').onclick=()=>$('chatbox').classList.toggle('open');
+$('closeChat').onclick=()=>$('chatbox').classList.remove('open');
+render();
+</script>
+</body>
+</html>
